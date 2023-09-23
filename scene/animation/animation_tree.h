@@ -211,6 +211,7 @@ public:
 private:
 	struct TrackCache {
 		bool root_motion = false;
+		bool update_in_pass = false;
 		uint64_t setup_pass = 0;
 		Animation::TrackType type = Animation::TrackType::TYPE_ANIMATION;
 		Object *object = nullptr;

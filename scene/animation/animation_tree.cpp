@@ -1062,6 +1062,7 @@ void AnimationTree::_process_graph(double p_delta) {
 	{
 		for (const KeyValue<NodePath, TrackCache *> &K : track_cache) {
 			TrackCache *track = K.value;
+			track->update_in_pass = false;
 
 			switch (track->type) {
 				case Animation::TYPE_POSITION_3D: {
@@ -1140,6 +1141,7 @@ void AnimationTree::_process_graph(double p_delta) {
 					continue;
 				}
 				track->root_motion = root_motion_track == path;
+				track->update_in_pass = true;
 
 				switch (ttype) {
 					case Animation::TYPE_POSITION_3D: {
@@ -1721,6 +1723,10 @@ void AnimationTree::_process_graph(double p_delta) {
 		// finally, set the tracks
 		for (const KeyValue<NodePath, TrackCache *> &K : track_cache) {
 			TrackCache *track = K.value;
+
+			if (!track->update_in_pass) {
+				continue; // animation states didn't update the track, ignore
+			}
 
 			switch (track->type) {
 				case Animation::TYPE_POSITION_3D: {
